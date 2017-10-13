@@ -1,21 +1,19 @@
 #import Tkinter as tk
 #import numpy as np
-import cv2
 
 from image_processor import ImageProcessor
-from file_handler import FileHandler
 
 
 class ImageCamouflager():
     
-    file_handler = FileHandler()
     image_processor = ImageProcessor()
     
     quantizationLevels = [0,85,170,255]
     
     
-    def camouflage(self, background_path, overlay_path):
-        self.background, self.overlay = self.read_inputs(background_path, overlay_path)
+    def camouflage(self, background, overlay):
+        self.background = background
+        self.overlay = overlay
         
         proccessed_background = self.proccess_background()
         proccessed_overlay = self.proccess_overlay()
@@ -27,17 +25,7 @@ class ImageCamouflager():
         
         output = self.image_processor.overlapImages(self.background, texturized_overlay)
         
-        print "done"
-        
-        self.file_handler.show(output)
-        
-    def read_inputs(self, background_path, overlay_path):
-        print "> reading inputs"
-
-        background = self.file_handler.read(background_path, colors=True)
-        overlay = self.file_handler.read(overlay_path, alpha=True)
-        
-        return background, overlay
+        return output
         
     def proccess_background(self):
         print "> proccessing background image"

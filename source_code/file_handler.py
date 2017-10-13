@@ -16,3 +16,6 @@ class FileHandler():
         cv2.imshow("Result", image)
         cv2.waitKey(0)
         
+    def save(self, image):
+        cv2.imwrite("result.png", image)
+        

@@ -1,7 +1,4 @@
 import numpy as np
-import Tkinter as tk
-from Tkinter import Tk, Frame, BOTH
-import cv2
 
 
 class ImageProcessor():
