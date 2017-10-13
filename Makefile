@@ -1,3 +1,4 @@
-install:
+setup:
 	pip install numpy
-	brew install cv2
+	pip install opencv-python
+
