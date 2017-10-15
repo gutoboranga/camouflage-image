@@ -19,6 +19,9 @@ resized_overlay = image_resizer.resize()
 camo = ImageCamouflager()
 result = camo.camouflage(background, resized_overlay)
 
+if sys.argv[1] == "save":
+    file_handler.save(result)
+
 print "done!"
 
 file_handler.show(result)
