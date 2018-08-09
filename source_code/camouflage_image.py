@@ -1,8 +1,11 @@
 #import Tkinter as tk
 #import numpy as np
+from sys import argv
 
 from image_processor import ImageProcessor
-
+from file_handler import FileHandler
+from file_picker import FilePicker
+from image_resizer import ImageResizer
 
 class ImageCamouflager():
     
@@ -12,37 +15,41 @@ class ImageCamouflager():
     
     
     def camouflage(self, background, overlay):
+        
         self.background = background
         self.overlay = overlay
         
-        proccessed_background = self.proccess_background()
-        proccessed_overlay = self.proccess_overlay()
+        # 1. process both background and overlay images
+        processed_background = self.process_background()
+        processed_overlay = self.process_overlay()
         
-        textures = self.create_textures(self.background, proccessed_background, proccessed_overlay)
+        # 2. create the background textures and corrects them if some of the textures is empty
+        textures = self.create_textures(self.background, processed_background, processed_overlay)
         textures = self.correct_empty_textures(textures)
         
-        texturized_overlay = self.apply_textures(proccessed_overlay, textures)
+        # 3. apply the texture to overlay image
+        texturized_overlay = self.apply_textures(processed_overlay, textures)
         
+        # 4. overlap the original background image with the final (texturized) overlay
         output = self.image_processor.overlapImages(self.background, texturized_overlay)
         
         return output
         
-    def proccess_background(self):
-        print "> proccessing background image"
+    def process_background(self):
+        print "> processing background image"
+        processed_background = self.image_processor.luminanceNoAlpha(self.background)
+        processed_background = self.image_processor.quantizationNoAlpha(processed_background)
         
-        proccessed_background = self.image_processor.luminanceNoAlpha(self.background)
-        proccessed_background = self.image_processor.quantizationNoAlpha(proccessed_background, 4)
+        return processed_background
         
-        return proccessed_background
+    def process_overlay(self):
+        print "> processing overlay image"
         
-    def proccess_overlay(self):
-        print "> proccessing overlay image"
+        processed_overlay = self.image_processor.luminance(self.overlay)
+        processed_overlay = self.adjust_brightness(self.background, processed_overlay)
+        processed_overlay = self.image_processor.quantization(processed_overlay, 4)
         
-        proccessed_overlay = self.image_processor.luminance(self.overlay)
-        proccessed_overlay = self.adjust_brightness(self.background, proccessed_overlay)
-        proccessed_overlay = self.image_processor.quantization(proccessed_overlay, 4)
-        
-        return proccessed_overlay
+        return processed_overlay
         
     def adjust_brightness(self, reference, image_to_be_adjusted):
         print "> adjusting brightness"
@@ -130,3 +137,15 @@ class ImageCamouflager():
 
     def pixelIsValid(self, pixel):
         return pixel[3] > 0
+
+if __name__ == "__main__":
+    file_handler = FileHandler()
+    
+    background = file_handler.read(argv[1], colors=True)
+    overlay = file_handler.read(argv[2], alpha=True)
+    
+    camo = ImageCamouflager()
+    
+    result = camo.camouflage(background, overlay)
+    file_handler.save(result)
+    

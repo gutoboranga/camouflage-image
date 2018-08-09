@@ -1,3 +1,4 @@
+import cv2
 import numpy as np
 
 
@@ -32,6 +33,10 @@ class ImageProcessor():
                     
         
         return result
+
+    def lumi(self, image):
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        return gray
 
     def luminanceNoAlpha(self, image):
         height, width, channels = image.shape
@@ -69,24 +74,31 @@ class ImageProcessor():
                         result[row, column] = [255, 255, 255, 1]
         return result
 
-    def quantizationNoAlpha(self, image, tonesQuantity):
-        height, width, channels = image.shape
-        result = np.zeros([height,width,channels],dtype=np.uint8)
+    def quantizationNoAlpha(self, image):
+        height, width, channels = self.unpack_image(image)
+        
+        result = image
+        
+        import ipdb; ipdb.set_trace()
         
         for row in range(0,height):
             for column in range(0,width - 1):
-                pixel = image[row, column]
-                # check in which interval the pixel is
-                if pixel[0] < 191:
-                    if pixel[0] < 127:
-                        if pixel[0] < 63:
-                            result[row, column] = [0, 0, 0]
-                        else:
-                            result[row, column] = [85, 85, 85]
-                    else:
-                        result[row, column] = [170, 170, 170]
+                if channels > 1:
+                    pixel = image[row, column][0]
                 else:
-                    result[row, column] = [255, 255, 255]
+                    pixel = image[row, column]
+                
+                # check in which interval the pixel is
+                if pixel < 191:
+                    if pixel < 127:
+                        if pixel < 63:
+                            result[row, column] = 0 if channels == 1 else [0] * channels
+                        else:
+                            result[row, column] = 85 if channels == 1 else [85] * channels
+                    else:
+                        result[row, column] = 170 if channels == 1 else [170] * channels
+                else:
+                    result[row, column] = 255 if channels == 1 else [255] * channels
         return result
 
     def brightness(self, image, value):
@@ -108,3 +120,13 @@ class ImageProcessor():
                         else:
                             result.itemset((row,column,c), 255)
         return result
+        
+    def unpack_image(self, image):
+        channels = 1
+        
+        if len(image.shape) == 2:
+            height, width = image.shape
+        else:
+            height, width, channels = image.shape
+        
+        return (height, width, channels)

@@ -6,7 +6,6 @@ from file_picker import FilePicker
 from image_resizer import ImageResizer
 
 file_picker = FilePicker()
-
 file_handler = FileHandler()
 
 background = file_handler.read(file_picker.background_path, colors=True)
