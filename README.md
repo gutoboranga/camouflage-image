@@ -10,6 +10,16 @@ Python 2.7.*
 
 `make setup` to install the dependencies.
 
-## Run
+## Execute
 
-`make run` will execute the algorithm.
+To execute, run the following, replacing the fields between `<>`:
+
+```
+python src/camouflage_image.py <BACKGROUND IMAGE PATH> <OVERLAY IMAGE PATH>
+```
+
+Working example:
+
+```
+python src/camouflage_image.py images/mountain.jpg images/mountain_overlay.png
+```
