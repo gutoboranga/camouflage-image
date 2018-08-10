@@ -4,9 +4,9 @@ setup:
 
 run:
 	@echo "> choose the images"
-	@python source_code/run.py
+	@python src/run.py
 
 run_and_save:
 	@echo "> choose the images"
-	@python source_code/run.py "save"
+	@python src/run.py "save"
 
