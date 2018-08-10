@@ -11,6 +11,9 @@ class ImageResizer():
     
     ip = ImageProcessor()
     fh = FileHandler()
+
+    MOVE_RATIO = 0.05
+    RESIZE_RATIO = 0.05
     
     def __init__(self, background, overlay):
         self.background = background
@@ -23,8 +26,9 @@ class ImageResizer():
         
         height, width, channels = self.background.shape
         
-        ammount_to_move = max(int(0.1 * height), int(0.1 * width))
-        
+        ammount_to_move = max(int(self.MOVE_RATIO * height), int(self.MOVE_RATIO * width))        
+        ammount_to_resize = max(int(self.RESIZE_RATIO * height), int(self.RESIZE_RATIO * width))
+
         x_offset = 0
         y_offset = 0
         
@@ -33,16 +37,20 @@ class ImageResizer():
             
             cv2.imshow("Result", output)
             ch = cv2.waitKey(0)
-            
+
+						# somente no linux (a principio):
+            ch = ch % 2**16
+
             if ch == 110:
-                self.overlay = self.smaller(self.overlay)
+                self.overlay = self.smaller(self.overlay, ammount_to_resize)
 
             elif ch == 109:
-                self.overlay = self.larger(self.overlay)
+                self.overlay = self.larger(self.overlay, ammount_to_resize)
                 
             # left
             elif ch == 97:
                 x_offset = x_offset - ammount_to_move
+                print('aaaaa')
                 
             # up
             elif ch == 119:
@@ -61,19 +69,15 @@ class ImageResizer():
                 return output
                 break
         
-    def larger(self, image):
+    def larger(self, image, ammount_to_enlarge):
         height, width, channels = image.shape
-        
-        ammount_to_enlarge = max(int(0.08 * height), int(0.08 * width))
         
         result = cv2.resize(image,(width + ammount_to_enlarge, height + ammount_to_enlarge), interpolation = cv2.INTER_CUBIC)
         
         return result
     
-    def smaller(self, image):
+    def smaller(self, image, ammount_to_diminish):
         height, width, channels = image.shape
-        
-        ammount_to_diminish = max(int(0.08 * height), int(0.08 * width))
         
         if height > 50 and width > 50:
             result = cv2.resize(image,(width - ammount_to_diminish, height - ammount_to_diminish), interpolation = cv2.INTER_CUBIC)
