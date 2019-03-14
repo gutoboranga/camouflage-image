@@ -14,7 +14,7 @@ class ImageCamouflager():
     quantizationLevels = [0,85,170,255]
     
     
-    def camouflage(self, background, overlay):
+    def run(self, background, overlay):
         
         self.background = background
         self.overlay = overlay

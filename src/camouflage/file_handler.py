@@ -28,3 +28,6 @@ class FileHandler():
     def save(self, image):
         cv2.imwrite("result.png", image)
         
+def save2(image, path):
+    cv2.imwrite(path, image)
+        

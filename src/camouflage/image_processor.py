@@ -128,3 +128,11 @@ class ImageProcessor():
             height, width, channels = image.shape
         
         return (height, width, channels)
+
+
+def image_from_string(string, flag=cv2.IMREAD_COLOR):
+    nparr = np.fromstring(string, np.uint8)
+    image = cv2.imdecode(nparr, flag)
+    
+    return image
+    
