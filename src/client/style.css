@@ -48,7 +48,7 @@ img {
 
     display: block;
     margin: 0 auto;
-    
+
     /* margin-top: 20px; */
     /* margin-bottom: 40px; */
 }
@@ -63,9 +63,21 @@ img {
 #image-container {
 }
 
+.konvajs-content {
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 #image {
     position: absolute;
     z-index: 1;
+
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 #container {
@@ -73,9 +85,14 @@ img {
 
     max-height: 400px;
     max-width: 50%;
-    
+
     position: absolute;
     z-index: 3;
+
+    left: 0;
+right: 0;
+margin-left: auto;
+margin-right: auto;
 }
 
 #background-canvas {
