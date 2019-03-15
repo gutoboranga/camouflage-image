@@ -1,0 +1,94 @@
+body {
+  font-family: courier;
+}
+
+h1 {
+  font-weight: 800;
+}
+
+p {
+    margin: auto;
+    padding-bottom: 20px;
+}
+
+.header {
+    width: 50%;
+    margin: auto;
+}
+
+input {
+  font-family: courier;
+  font-size: 12px;
+  margin-top: 10px;
+  margin-left: 26px;
+  display: block;
+}
+
+button {
+  font-family: courier;
+  font-size: 14px;
+  margin: auto;
+  display: block;
+}
+
+#instructions-div {
+    width: 50%;
+
+    display: block;
+    margin: 0 auto;
+}
+
+#upload {
+}
+
+img {
+    /* background-color: green; */
+    max-height: 400px;
+    max-width: 100%;
+
+    display: block;
+    margin: 0 auto;
+    
+    /* margin-top: 20px; */
+    /* margin-bottom: 40px; */
+}
+
+#image {
+    position: absolute;
+    z-index: 1;
+}
+
+#overlay-image {
+
+}
+
+#container {
+    margin: 0 auto;
+
+    max-height: 400px;
+    max-width: 50%;
+    
+    position: absolute;
+    z-index: 3;
+}
+
+#background-canvas {
+    /* background-color: green; */
+}
+
+#overlay-canvas {
+    /* background-color: purple; */
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+}
+
+@media (max-width: 900px)
+{
+  p {
+    max-width: 90%;
+  }
+}
