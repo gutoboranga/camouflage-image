@@ -1,3 +1,5 @@
+var anchors = []
+var theLayer = new Konva.Layer();
 
 function update(activeAnchor) {
     var group = activeAnchor.getParent();
@@ -40,7 +42,7 @@ function update(activeAnchor) {
         image.height(height);
     }
 }
-function addAnchor(group, x, y, name) {
+function makeAnchor(group, x, y, name) {
     var stage = group.getStage();
     var layer = group.getLayer();
     
@@ -83,6 +85,7 @@ function addAnchor(group, x, y, name) {
     });
     
     group.add(anchor);
+    anchors.push(anchor)
 }
 
 function showResize(image, width, height) {
@@ -109,13 +112,13 @@ function showResize(image, width, height) {
     });
     
     
-    console.log("bunda");
+    // console.log("bunda");
     layer.add(darthVaderGroup);
     darthVaderGroup.add(darthVaderImg);
-    addAnchor(darthVaderGroup, 0, 0, 'topLeft');
-    addAnchor(darthVaderGroup, 200, 0, 'topRight');
-    addAnchor(darthVaderGroup, 200, 138, 'bottomRight');
-    addAnchor(darthVaderGroup, 0, 138, 'bottomLeft');
+    makeAnchor(darthVaderGroup, 0, 0, 'topLeft');
+    makeAnchor(darthVaderGroup, 200, 0, 'topRight');
+    makeAnchor(darthVaderGroup, 200, 138, 'bottomRight');
+    makeAnchor(darthVaderGroup, 0, 138, 'bottomLeft');
     
     var imageObj1 = new Image();
     imageObj1.onload = function() {
@@ -123,4 +126,13 @@ function showResize(image, width, height) {
         layer.draw();
     };
     imageObj1.src = image;
+    
+    theLayer = layer;
+}
+
+function removeAnchors() {
+    for (i in anchors) {
+        anchors[i].hide();
+        theLayer.draw();
+    }
 }

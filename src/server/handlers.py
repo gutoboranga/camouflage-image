@@ -12,7 +12,19 @@ from image_processor import image_from_string as make_image
 BASE_URL = "http://localhost:5000"
 RESULTS_PATH = "results"
 
-class WakeUpHandler(RequestHandler):
+class BaseHandler(RequestHandler):
+    
+    def set_default_headers(self):
+        self.set_header("Access-Control-Allow-Origin", "*")
+        self.set_header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin, X-Requested-With, Content-Type, Accept, Authorization")
+        self.set_header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS')
+
+    def options(self):
+        self.set_status(204)
+        self.finish()
+
+
+class WakeUpHandler(BaseHandler):
 
     def initialize(self):
         pass
@@ -21,7 +33,7 @@ class WakeUpHandler(RequestHandler):
         self.write("I'm awake now")
 
 
-class ResultHandler(RequestHandler):
+class ResultHandler(BaseHandler):
     
     def make_path(self, hash):
         return "{}/{}.jpg".format(RESULTS_PATH, hash)
@@ -36,7 +48,7 @@ class ResultHandler(RequestHandler):
             self.write("Not found")
 
 
-class CreateHandler(RequestHandler):
+class CreateHandler(BaseHandler):
 
     def initialize(self):
         pass
@@ -52,9 +64,16 @@ class CreateHandler(RequestHandler):
         print("> will camouflage")
         
         try:
+            # print(self.request)
+            # print(self.request.body)
+            print(self.request.files)
+            
             background_body = self.request.files['background']
             overlay_body = self.request.files['overlay']
             
+            # background_body = self.get_body_argument("background", default=None, strip=False)
+            # overlay_body = self.get_body_argument("overlay", default=None, strip=False)
+
             background = make_image(background_body[0]['body'])
             overlay = make_image(overlay_body[0]['body'], flag=-1)
             

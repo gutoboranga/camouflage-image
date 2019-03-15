@@ -42,7 +42,7 @@ button {
 }
 
 img {
-    /* background-color: green; */
+    background-color: green;
     max-height: 400px;
     max-width: 100%;
 
@@ -53,13 +53,19 @@ img {
     /* margin-bottom: 40px; */
 }
 
+#image-container-wraper {
+    /* background-color: orange; */
+    /* justify-content: center; */
+    /* align-items: center; */
+    /* display: flex; */
+}
+
+#image-container {
+}
+
 #image {
     position: absolute;
     z-index: 1;
-}
-
-#overlay-image {
-
 }
 
 #container {
