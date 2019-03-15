@@ -22,16 +22,16 @@ class ImageProcessor():
     def luminance(self, image):
         height, width, channels = image.shape
         result = np.zeros([height,width,channels],dtype=np.uint8)
-        
+
         for row in range(0,height):
             for column in range(0,width - 1):
                 color = image[row, column]
-        
+
                 if color[3] !=0:
                     l = 0.299 * color[0] + 0.587 * color[1] + 0.114 * color[2]
                     result[row, column] = [l,l,l,color[3]]
-                    
-        
+
+
         return result
 
     def lumi(self, image):
@@ -41,19 +41,19 @@ class ImageProcessor():
     def luminanceNoAlpha(self, image):
         height, width, channels = image.shape
         result = np.zeros([height,width,channels],dtype=np.uint8)
-        
+
         for row in range(0,height):
             for column in range(0,width - 1):
                 color = image[row, column]
                 l = 0.299 * color[0] + 0.587 * color[1] + 0.114 * color[2]
                 result[row, column] = [l,l,l]
-                
+
         return result
 
     def quantization(self, image, tonesQuantity):
         height, width, channels = image.shape
         result = np.zeros([height,width,channels],dtype=np.uint8)
-        
+
         for row in range(0,height):
             for column in range(0,width - 1):
                 pixel = image[row, column]
@@ -76,16 +76,16 @@ class ImageProcessor():
 
     def quantizationNoAlpha(self, image):
         height, width, channels = self.unpack_image(image)
-        
+
         result = image
-        
+
         for row in range(0,height):
             for column in range(0,width - 1):
                 if channels > 1:
                     pixel = image[row, column][0]
                 else:
                     pixel = image[row, column]
-                
+
                 # check in which interval the pixel is
                 if pixel < 191:
                     if pixel < 127:
@@ -102,7 +102,7 @@ class ImageProcessor():
     def brightness(self, image, value):
         height, width, channels = image.shape
         result = np.zeros([height,width,channels],dtype=np.uint8)
-        
+
         for row in range(0,height):
             for column in range(0,width):
                 pixel = image[row, column]
@@ -118,21 +118,26 @@ class ImageProcessor():
                         else:
                             result.itemset((row,column,c), 255)
         return result
-        
+
     def unpack_image(self, image):
         channels = 1
-        
+
         if len(image.shape) == 2:
             height, width = image.shape
         else:
             height, width, channels = image.shape
-        
+
         return (height, width, channels)
 
+def data_uri_to_cv2_img(uri, flag=cv2.IMREAD_COLOR):
+    encoded_data = uri.split(',')[1]
+    nparr = np.fromstring(encoded_data.decode('base64'), np.uint8)
+    img = cv2.imdecode(nparr, flag)
+
+    return img    
 
 def image_from_string(string, flag=cv2.IMREAD_COLOR):
     nparr = np.fromstring(string, np.uint8)
     image = cv2.imdecode(nparr, flag)
-    
+
     return image
-    

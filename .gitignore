@@ -2,3 +2,4 @@
 .python-version
 result.png
 *.pyc
+src/server/results/*
