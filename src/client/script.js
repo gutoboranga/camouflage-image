@@ -47,8 +47,6 @@ function didSelectOverlay(input) {
             addInstruction(3);
         }
 
-        console.log("did select overlay");
-
         overlay = e.target.result
         updateImages();
 
@@ -60,16 +58,17 @@ function didSelectOverlay(input) {
 
 function didFinishEditing() {
 
-    overlay = getKonvaOverlay()
+    let newOverlay = getKonvaOverlay()
 
     let size = getBackgroundSize()
 
     let target = document.getElementById('container')
     var spinner = new Spinner().spin(target);
 
-    resizeOverlay(size[0], size[1], function(newOverlayData) {
+    resizeOverlay(size[0], size[1], newOverlay, function(newOverlayData) {
         postFiles(background, newOverlayData, function(resultUrl) {
-            showResultingImage(resultUrl)
+            showResultingImage(resultUrl);
+            removeKonva();
         }, function() {
             spinner.stop();
         });
@@ -78,18 +77,21 @@ function didFinishEditing() {
 }
 
 function showResultingImage(resultUrl) {
-    console.log("oi");
+    let img = document.getElementById('image')
 
-    canvasContainer = document.getElementById('container');
-    canvasContainer.parentNode.removeChild(canvasContainer);
+    img.onload = function() {}
+    img.src = resultUrl;
+}
 
-    document.getElementById('image').src = resultUrl;
+function removeKonva() {
+    let konvaDiv = document.getElementsByClassName('konvajs-content')[0];
+    konvaDiv.parentNode.removeChild(konvaDiv);
 }
 
 // ============ Auxiliar ============
 
 function updateImages() {
-
+    
     if (lastInstructionShowed >= 3) {
 
         img = document.getElementById('image')

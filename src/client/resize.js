@@ -1,7 +1,7 @@
 
 function getKonvaOverlay() {
 
-    let konva = document.getElementsByClassName('konvajs-content')[0]
+    let konva = document.getElementsByClassName('konvajs-content')[0];
     let canvas = konva.children[0]
 
     removeAnchors();
@@ -16,7 +16,7 @@ function getBackgroundSize() {
     return [img.width, img.height]
 }
 
-function resizeOverlay(width, height, completion) {
+function resizeOverlay(width, height, ov, completion) {
     let canvas = document.createElement('canvas');
 
     canvas.width = width;
@@ -27,7 +27,7 @@ function resizeOverlay(width, height, completion) {
     // context.drawImage(overlay, 0, 0, width, height);
 
     var img = new Image();
-    img.src = overlay;
+    img.src = ov;
 
     img.onload = function() {
         context.drawImage(img, 0, 0, width, height);

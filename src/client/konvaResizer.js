@@ -3,16 +3,16 @@ var theLayer = new Konva.Layer();
 
 function update(activeAnchor) {
     var group = activeAnchor.getParent();
-    
+
     var topLeft = group.get('.topLeft')[0];
     var topRight = group.get('.topRight')[0];
     var bottomRight = group.get('.bottomRight')[0];
     var bottomLeft = group.get('.bottomLeft')[0];
     var image = group.get('Image')[0];
-    
+
     var anchorX = activeAnchor.getX();
     var anchorY = activeAnchor.getY();
-    
+
     // update anchor positions
     switch (activeAnchor.getName()) {
         case 'topLeft':
@@ -32,9 +32,9 @@ function update(activeAnchor) {
         topLeft.x(anchorX);
         break;
     }
-    
+
     image.position(topLeft.position());
-    
+
     var width = topRight.getX() - topLeft.getX();
     var height = bottomLeft.getY() - topLeft.getY();
     if (width && height) {
@@ -45,7 +45,7 @@ function update(activeAnchor) {
 function makeAnchor(group, x, y, name) {
     var stage = group.getStage();
     var layer = group.getLayer();
-    
+
     var anchor = new Konva.Circle({
         x: x,
         y: y,
@@ -57,7 +57,7 @@ function makeAnchor(group, x, y, name) {
         draggable: true,
         dragOnTop: false
     });
-    
+
     anchor.on('dragmove', function() {
         update(this);
         layer.draw();
@@ -83,7 +83,7 @@ function makeAnchor(group, x, y, name) {
         this.strokeWidth(2);
         layer.draw();
     });
-    
+
     group.add(anchor);
     anchors.push(anchor)
 }
@@ -95,38 +95,36 @@ function showResize(image, width, height) {
         width: width,
         height: height
     });
-    
+
     var layer = new Konva.Layer();
     stage.add(layer);
-    
+
     // darth vader
     var darthVaderImg = new Konva.Image({
         width: 200,
         height: 137
     });
-    
+
     var darthVaderGroup = new Konva.Group({
         x: 180,
         y: 50,
         draggable: true
     });
-    
-    
-    // console.log("bunda");
+
     layer.add(darthVaderGroup);
     darthVaderGroup.add(darthVaderImg);
     makeAnchor(darthVaderGroup, 0, 0, 'topLeft');
     makeAnchor(darthVaderGroup, 200, 0, 'topRight');
     makeAnchor(darthVaderGroup, 200, 138, 'bottomRight');
     makeAnchor(darthVaderGroup, 0, 138, 'bottomLeft');
-    
+
     var imageObj1 = new Image();
     imageObj1.onload = function() {
         darthVaderImg.image(imageObj1);
         layer.draw();
     };
     imageObj1.src = image;
-    
+
     theLayer = layer;
 }
 

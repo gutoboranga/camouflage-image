@@ -14,7 +14,7 @@ function postFiles(bg, ov, successCompletion, completion) {
             completion();
 
             if (request.response == 'erro' || request.response == null || request.response == '') {
-                alert('Algum erro aconteceu :(')
+                alert('Algum erro aconteceu :(');
             } else {
                 successCompletion(request.response);
             }
