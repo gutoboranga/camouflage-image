@@ -124,6 +124,7 @@ function addInstruction(index) {
 }
 
 window.onload = function () {
+    wakeUpRequest();
     addInstruction(1);
 }
 

@@ -1,5 +1,10 @@
 let BASE_URL = "http://localhost:5000"
 
+function wakeUpRequest() {
+    var request = new XMLHttpRequest();
+    request.open('get', BASE_URL);
+}
+
 function postFiles(bg, ov, successCompletion, completion) {
 
     var data = new FormData();
