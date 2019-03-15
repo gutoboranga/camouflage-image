@@ -1,6 +1,6 @@
 let BASE_URL = "http://localhost:5000"
 
-function post(bg, ov, successCompletion) {
+function postFiles(bg, ov, successCompletion, completion) {
 
     var data = new FormData();
     var request = new XMLHttpRequest();
@@ -11,7 +11,9 @@ function post(bg, ov, successCompletion) {
     request.addEventListener('readystatechange', function(e) {
         if( this.readyState === 4 ) {
 
-            if (request.response == 'erro') {
+            completion();
+
+            if (request.response == 'erro' || request.response == null || request.response == '') {
                 alert('Algum erro aconteceu :(')
             } else {
                 successCompletion(request.response);

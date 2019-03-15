@@ -64,16 +64,22 @@ function didFinishEditing() {
 
     let size = getBackgroundSize()
 
+    let target = document.getElementById('container')
+    var spinner = new Spinner().spin(target);
+
     resizeOverlay(size[0], size[1], function(newOverlayData) {
-        // post(background, newOverlayData);
-        post(background, newOverlayData, function(resultUrl) {
+        postFiles(background, newOverlayData, function(resultUrl) {
             showResultingImage(resultUrl)
+        }, function() {
+            spinner.stop();
         });
     })
 
 }
 
 function showResultingImage(resultUrl) {
+    console.log("oi");
+
     canvasContainer = document.getElementById('container');
     canvasContainer.parentNode.removeChild(canvasContainer);
 
