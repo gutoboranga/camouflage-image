@@ -1,5 +1,4 @@
 backports-abc==0.5
-futures==3.2.0
 numpy==1.16.2
 opencv-python==4.0.0.21
 singledispatch==3.4.0.3
