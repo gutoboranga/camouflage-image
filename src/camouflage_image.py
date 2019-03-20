@@ -26,12 +26,20 @@ class ImageCamouflager():
         # processed_background = self.process_background()
         # processed_overlay = self.process_overlay()
 
-        t1 = Thread(target=lambda a: processed_background = self.process_background())
-        t2 = Thread(target=lambda a: processed_overlay = self.process_overlay())
+        self.processed_background = background
+        self.processed_overlay = overlay
 
+        t1 = Thread(target=self.process_background)
+        t2 = Thread(target=self.process_overlay)
+
+        t1.start()
+        t2.start()
         
+        t1.join()
+        t2.join()
+
         # 2. create the background textures and corrects them if some of the textures is empty
-        textures = self.create_textures(self.background, processed_background, processed_overlay)
+        textures = self.create_textures(self.background, self.processed_background, self.processed_overlay)
         textures = self.correct_empty_textures(textures)
         
         # 3. apply the texture to overlay image
@@ -40,35 +48,35 @@ class ImageCamouflager():
         # 4. overlap the original background image with the final (texturized) overlay
         # output = self.image_processor.overlapImages(self.background, texturized_overlay)
 
-        output = self.image_processor.overlapImagesWithTextures(self.background, processed_overlay, textures)
+        output = self.image_processor.overlapImagesWithTextures(self.background, self.processed_overlay, textures)
         
         return output
         
     def process_background(self):
         print "> processing background image"
-        processed_background = self.image_processor.luminanceNoAlpha(self.background)
-        processed_background = self.image_processor.quantizationNoAlpha(processed_background)
+        result = self.image_processor.luminanceNoAlpha(self.background)
+        result = self.image_processor.quantizationNoAlpha(result)
         
-        return processed_background
+        self.processed_background = result
         
     def process_overlay(self):
         print "> processing overlay image"
         
-        processed_overlay = self.image_processor.luminance(self.overlay)
-        processed_overlay = self.adjust_brightness(self.background, processed_overlay)
-        processed_overlay = self.image_processor.quantization(processed_overlay, 4)
+        result = self.image_processor.luminance(self.overlay)
+        result = self.adjust_brightness(self.background, result)
+        result = self.image_processor.quantization(result, 4)
         
-        return processed_overlay
+        self.processed_overlay = result
         
     def adjust_brightness(self, reference, image_to_be_adjusted):
         print "> adjusting brightness"
         
-        bright_factors = self.calculate_brightness_diff(reference, image_to_be_adjusted)
+        bright_factors = self.calculate_brightness_factors(reference, image_to_be_adjusted)
         bright_difference = bright_factors[0] - bright_factors[1]
         
         return self.image_processor.brightness(image_to_be_adjusted, bright_difference)
         
-    def calculate_brightness_diff(self, background, overlay):
+    def calculate_brightness_factors(self, background, overlay):
         height, width, channels = overlay.shape
         back = []
         over = []
@@ -77,6 +85,9 @@ class ImageCamouflager():
                 if self.pixelIsValid(overlay[row, column]):
                     back.append(background[row, column][0])
                     over.append(overlay[row, column][0])
+
+#sum(pixel[0] for)
+        print("aaa")
         return [sum(back)/len(back), sum(over)/len(over)]
         
 
@@ -111,12 +122,12 @@ class ImageCamouflager():
                     if len(textures[i + 1]) > 0:
                         textures[i] = textures[i + 1]
                     else:
-                        sys.exit("> Error: Image too difficult to camouflage. Sorry :(")
+                        raise Exception("Image too difficult to camouflage. Sorry :(")
                 else:
                     if len(textures[i - 1]) > 0:
                         textures[i] = textures[i - 1]
                     else:
-                        sys.exit("> Error: Image too difficult to camouflage. Sorry :(")
+                        raise Exception("Image too difficult to camouflage. Sorry :(")
         return textures
 
     def apply_textures(self, image, textures):

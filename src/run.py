@@ -29,5 +29,5 @@ result = camo.camouflage(background, overlay)
 print "Done!"
 
 # 6. Show the result
-# file_handler.show(result)
+file_handler.save(result)
 
