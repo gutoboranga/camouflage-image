@@ -2,6 +2,9 @@
 #import numpy as np
 from sys import argv
 
+from threading import Thread
+import time
+
 from image_processor import ImageProcessor
 from file_handler import FileHandler
 from file_picker import FilePicker
@@ -20,8 +23,12 @@ class ImageCamouflager():
         self.overlay = overlay
         
         # 1. process both background and overlay images
-        processed_background = self.process_background()
-        processed_overlay = self.process_overlay()
+        # processed_background = self.process_background()
+        # processed_overlay = self.process_overlay()
+
+        t1 = Thread(target=lambda a: processed_background = self.process_background())
+        t2 = Thread(target=lambda a: processed_overlay = self.process_overlay())
+
         
         # 2. create the background textures and corrects them if some of the textures is empty
         textures = self.create_textures(self.background, processed_background, processed_overlay)
