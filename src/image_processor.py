@@ -3,6 +3,42 @@ import numpy as np
 
 
 class ImageProcessor():
+
+    def __init__(self, quantizationLevels=None):
+        self.quantizationLevels = quantizationLevels
+
+    def overlapImagesWithTextures(self, back, overlay, textures):
+        height, width, channels = back.shape
+        result = np.zeros([height,width,channels],dtype=np.uint8)
+        texturePointers = [0,0,0,0]
+
+        for row in range(0,height):
+            for column in range(0,width):
+                overPixel = overlay[row, column]
+
+                # if pixel in overlay is not transparent (alpha > 0)
+                if overPixel[3] > 0:
+
+                    i = 0
+                    found = False
+                    while i < 4 and not found:
+                        if overPixel[0] == self.quantizationLevels[i]:
+                            if len(textures[i]) <= texturePointers[i]:
+                                texturePointers[i] = 0
+                            newPixel = textures[i][texturePointers[i]]
+                            result[row, column] = [newPixel[0], newPixel[1], newPixel[2]]
+                            texturePointers[i] = texturePointers[i] + 1
+                            found = True
+                        i = i + 1
+
+                    # pixel from overlay
+                    # result[row, column] = [overPixel[0], overPixel[1], overPixel[2]]
+                else:
+                    # pixel from brackground
+                    result[row, column] = back[row, column]
+        return result
+
+
     def overlapImages(self, back, overlay):
         height, width, channels = back.shape
         result = np.zeros([height,width,channels],dtype=np.uint8)

@@ -9,9 +9,9 @@ from image_resizer import ImageResizer
 
 class ImageCamouflager():
     
-    image_processor = ImageProcessor()
-    
     quantizationLevels = [0,85,170,255]
+
+    image_processor = ImageProcessor(quantizationLevels=quantizationLevels)
     
     
     def camouflage(self, background, overlay):
@@ -28,10 +28,12 @@ class ImageCamouflager():
         textures = self.correct_empty_textures(textures)
         
         # 3. apply the texture to overlay image
-        texturized_overlay = self.apply_textures(processed_overlay, textures)
+        # texturized_overlay = self.apply_textures(processed_overlay, textures)
         
         # 4. overlap the original background image with the final (texturized) overlay
-        output = self.image_processor.overlapImages(self.background, texturized_overlay)
+        # output = self.image_processor.overlapImages(self.background, texturized_overlay)
+
+        output = self.image_processor.overlapImagesWithTextures(self.background, processed_overlay, textures)
         
         return output
         
