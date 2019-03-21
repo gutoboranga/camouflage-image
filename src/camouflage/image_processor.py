@@ -1,8 +1,51 @@
+from math import floor
+
 import cv2
 import numpy as np
 
 
 class ImageProcessor():
+    
+    def __init__(self, quantizationLevels=None):
+        self.quantizationLevels = quantizationLevels
+
+    def overlapImagesWithTextures(self, back, overlay, textures):
+        height, width, channels = back.shape
+        result = np.zeros([height,width,channels],dtype=np.uint8)
+        texturePointers = [0,0,0,0]
+
+        for row in range(0,height):
+            for column in range(0,width):
+                overPixel = overlay[row, column]
+
+                # if pixel in overlay is not transparent (alpha > 0)
+                if overPixel[3] > 0:
+
+                    i = 0
+                    found = False
+                    while i < 4 and not found:
+                        if overPixel[0] == self.quantizationLevels[i]:
+                            if len(textures[i]) <= texturePointers[i]:
+                                texturePointers[i] = 0
+                            newPixel = textures[i][texturePointers[i]]
+                            result[row, column] = [newPixel[0], newPixel[1], newPixel[2]]
+                            texturePointers[i] = texturePointers[i] + 1
+                            found = True
+                        i = i + 1
+
+                    # pixel from overlay
+                    # result[row, column] = [overPixel[0], overPixel[1], overPixel[2]]
+                else:
+                    # pixel from brackground
+                    result[row, column] = back[row, column]
+        return result
+    
+    def getBrightDifferences(self, back, over):
+        b = floor(np.mean(back))
+        o = floor(np.mean(over))
+        
+        return b,o
+    
     def overlapImages(self, back, overlay):
         height, width, channels = back.shape
         result = np.zeros([height,width,channels],dtype=np.uint8)
@@ -106,10 +149,17 @@ class ImageProcessor():
         for row in range(0,height):
             for column in range(0,width):
                 pixel = image[row, column]
-                if pixel[3] !=0:
+                
+                if pixel[3] > 0:
+                    # sum = pixel[0] + value
+                    # newValue = sum if (sum > 0  and sum <= 255) else (0 if sum < 0 else 255)
+                    #
+                    # result[row, column] = [newValue, newValue, newValue, pixel[3]]
+                    
                     for c in range(0,channels):
                         color = image.item(row,column,c)
                         newValue = (color + value)
+                        
                         if newValue <= 255:
                             if newValue >= 0:
                                 result.itemset((row,column,c), newValue)
@@ -134,7 +184,7 @@ def data_uri_to_cv2_img(uri, flag=cv2.IMREAD_COLOR):
     nparr = np.fromstring(encoded_data.decode('base64'), np.uint8)
     img = cv2.imdecode(nparr, flag)
 
-    return img    
+    return img
 
 def image_from_string(string, flag=cv2.IMREAD_COLOR):
     nparr = np.fromstring(string, np.uint8)
