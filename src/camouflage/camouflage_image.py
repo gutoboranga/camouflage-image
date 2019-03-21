@@ -17,7 +17,7 @@ class ImageCamouflager():
     image_processor = ImageProcessor(quantizationLevels=quantizationLevels)
     
     
-    def camouflage(self, background, overlay):
+    def run(self, background, overlay):
         
         self.background = background
         self.overlay = overlay
