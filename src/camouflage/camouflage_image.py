@@ -7,7 +7,6 @@ import time
 
 from image_processor import ImageProcessor
 from file_handler import FileHandler
-from file_picker import FilePicker
 from image_resizer import ImageResizer
 
 class ImageCamouflager():

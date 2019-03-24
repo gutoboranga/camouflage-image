@@ -2,11 +2,9 @@ import sys
 
 from camouflage_image import ImageCamouflager
 from file_handler import FileHandler
-from file_picker import FilePicker
 from image_resizer import ImageResizer
 
 # 1. Open file picker to choose 2 images: Background and Overlay
-#file_picker = FilePicker()
 file_handler = FileHandler()
 
 # 2. Read the files chosen
